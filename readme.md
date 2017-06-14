@@ -13,6 +13,8 @@
 超级管理员登录后，可以进行所有操作，可以看到所有菜单栏；
 普通用户登录后只有部分权限，只能看到部分菜单栏或操作按钮。
 
+
+
 ### 主要模块：
 
 - express：node框架
@@ -27,7 +29,7 @@ Amaze ui、angular、Z-Tree
 
 
 
-### 源码地址：
+### 源码地址：https://github.com/wuwanyu/aclDemo
 
 
 
@@ -48,7 +50,19 @@ Amaze ui、angular、Z-Tree
 
 ##### 3. 运行：npm start
 
-##### 4.在浏览器输入： http://localhost:3000（用户名/密码：admin/admin）
+##### 4.在浏览器输入： http://localhost:3000（用户名/密码：admin/admin   或    user/123）
+
+
+
+### 部分截图
+
+![image](https://github.com/wuwanyu/aclDemo/blob/master/screenshot/perManage.png)
+
+![image](https://github.com/wuwanyu/aclDemo/blob/master/screenshot/roleManage.png)
+
+![image](https://github.com/wuwanyu/aclDemo/blob/master/screenshot/userManage.png)
+
+![image](https://github.com/wuwanyu/aclDemo/blob/master/screenshot/user.png)
 
 ### 接口文档
 
@@ -78,7 +92,7 @@ Amaze ui、angular、Z-Tree
 
 #### 资源
 
-1. 保存整个资源树（增加、修改、删除都是这个方法）
+1. 保存资源树（增加、修改、删除都是这个方法）
 
 ```
 /api/acl_resource/addArray
@@ -93,7 +107,7 @@ Amaze ui、angular、Z-Tree
 }
 ```
 
-2.获取整个资源树
+2.获取资源列表
 
 ```
 /api/acl_resource/getList
@@ -210,12 +224,14 @@ Amaze ui、angular、Z-Tree
   ],
   "count": 13
 }
-
+            
 ```
+
+
 
 角色
 
-1. 获取角色列表
+1. 查询角色列表
 
 ```
 /api/acl_role/getList：获取角色列表
@@ -254,7 +270,9 @@ Amaze ui、angular、Z-Tree
 }
 ```
 
-1. 修改
+
+
+2.修改角色
 
 ```
 /api/acl_role/update
@@ -271,7 +289,9 @@ result:data.update
 }
 ```
 
-1. 查询一个
+
+
+3.查询角色详情（含角色的权限列表）
 
 ```
 /api/acl_role/getOne
@@ -299,7 +319,9 @@ id:27aab6d9-325c-4c88-be4a-5da516dc9613
 }
 ```
 
-1. 删除
+
+
+4.删除角色
 
 ```
 /api/acl_role/delete
@@ -317,7 +339,9 @@ result:result
 }
 ```
 
-1. allow
+
+
+5.给角色添加资源
 
 ```
 /api/acl_role/allow
@@ -335,9 +359,9 @@ msg:"成功！"
 }
 ```
 
-用户
+用户相关：
 
-1. 登录
+1.用户登录
 
 ```
 /api/acl_user/login
@@ -361,7 +385,7 @@ msg:"账号不存在"
 }
 ```
 
-1. 退出
+1. 用户退出
 
 ```
 /api/acl_user/logout
@@ -373,7 +397,9 @@ msg:"退出成功！"
 }
 ```
 
-1. 增加
+
+
+3.添加用户
 
 ```
 /api/acl_user/add
@@ -391,9 +417,10 @@ result:data.save
 }
 ```
 
-   ​
 
-1. 修改
+
+
+4.修改用户
 
 ```
 /api/acl_user/update
@@ -412,7 +439,7 @@ result:data.save
 }
 ```
 
-1. 查询一个
+5.查询用户详情（含用户权限列表）
 
 ```
 /api/acl_user/getOne
@@ -433,13 +460,13 @@ result:data.save
 }
 ```
 
-1. 获取列表
+6.获取用户列表
 
 ```
 /api/acl_user/getList
 参数：
 {
-
+ 
 }
 返回值：
 {
@@ -459,7 +486,7 @@ result:data.save
 }
 ```
 
-1. 删除
+7.删除用户
 
 ```
 /api/acl_user/delete
@@ -478,7 +505,9 @@ result:result
 }
 ```
 
-1. allowedPermissions
+
+
+8.获取用户权限
 
 ```
 /api/acl_user/allowedPermissions
@@ -493,7 +522,7 @@ result:result
 }
 ```
 
-1. addUserRoles
+9.给用户添加角色
 
 ```
 /api/acl_user/addUserRoles
@@ -510,7 +539,7 @@ result:result
 }
 ```
 
-1. userRoles
+10.给用户添加角色
 
 ```
 /api/acl_user/userRoles

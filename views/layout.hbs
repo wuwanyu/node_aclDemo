@@ -1,0 +1,141 @@
+<!doctype html>
+<html class="no-js fixed-layout"  ng-app="index-app">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>统一查询平台</title>
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <link rel="stylesheet" href="/plugins/amaze/css/amazeui.min.css"/>
+
+    <link rel="stylesheet" href="/plugins/amaze/css/admin.css"/>
+</head>
+<body >
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+    以获得更好的体验！</p>
+<![endif]-->
+
+<header class="am-topbar am-topbar-inverse admin-header">
+    <div class="am-topbar-brand">
+        统一查询平台
+    </div>
+
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+
+    <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+        <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+            <!--<li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>-->
+            <li class="am-dropdown" data-am-dropdown>
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                    <span class="am-icon-users"></span> {{ user.name }} <span class="am-icon-caret-down"></span>
+                </a>
+                <ul class="am-dropdown-content">
+                    <!--<li><a href="#"><span class="am-icon-user"></span> 资料</a></li>-->
+                    <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>
+                    <li><a href="/logout" ><span class="am-icon-power-off"></span> 退出</a></li>
+                </ul>
+            </li>
+            <li class="am-hide-sm-only"><a href="/logout" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="am-cf admin-main">
+
+    <!-- sidebar start -->
+    <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
+        <div class="am-offcanvas-bar admin-offcanvas-bar">
+            <ul class="am-list admin-sidebar-list">
+{{#if perms.6ceb918e-82b0-4777-8836-dd5fc110c7ce}}
+                <li><a href="/"><span class="am-icon-home" ></span> 首页</a></li>
+{{/if}}
+{{#if perms.f2574831-4224-4cbc-8c93-2da6cb7d531a}}
+            <li class="admin-parent">
+                <a class="am-cf" data-am-collapse="{target: '#collapse-nav1'}"><span class="am-icon-th"></span> 模块二 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+                <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav1">
+                    <li><a class="am-cf" href="/pages/page11"> 菜单一 </a></li>
+                    <li><a href="/pages/page12"> 菜单二 </a></li>
+                </ul>
+            </li>
+{{/if}}
+{{#if perms.5c85cbe4-0196-43b1-a948-5c5a1f3b5041}}
+                <li class="admin-parent">
+                    <a class="am-cf" data-am-collapse="{target: '#collapse-nav2'}"><span class="am-icon-th"></span> 模块二 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+                    <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav2">
+                        <li><a class="am-cf" href="/pages/page21"> 菜单一 </a></li>
+                        <li><a href="/pages/page22"> 菜单二 </a></li>
+                    </ul>
+                </li>
+{{/if}}
+{{#if perms.d4b51bd8-ac0e-4c3c-833d-f018a48567c9}}
+                <li class="admin-parent">
+                    <a class="am-cf" data-am-collapse="{target: '#collapse-nav5'}"><span class="am-icon-th"></span> 系统管理 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+                    <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav5">
+                        <li ><a class="am-cf" href="/sys/user"> 用户管理 </a></li>
+                        <li ><a href="/sys/role"> 角色管理 </a></li>
+                        <li ><a href="/sys/resource"> 权限管理 </a></li>
+                    </ul>
+                </li>
+{{/if}}
+            </ul>
+
+        </div>
+    </div>
+    <!-- sidebar end -->
+
+    <!-- content start -->
+    <div class="admin-content">
+
+        {{{ body }}}
+        <footer class="admin-content-footer">
+            <hr>
+            <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+        </footer>
+    </div>
+    <!-- content end -->
+
+</div>
+
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+
+<!--lib-->
+<script src="/js/jquery-1.9.1.min.js"></script>
+
+<script src="/plugins/amaze/js/amazeui.min.js"></script>
+<script src="/plugins/amaze/js/app.js"></script>
+<script src="/js/angular.min.js"></script>
+<script src="/js/public.js"></script>
+
+<!--<script src="/plugins/zTree/js/jquery-1.4.4.min.js"></script>-->
+<script src="/plugins/zTree/js/jquery.ztree.core-3.5.js"></script>
+<script src="/plugins/zTree/js/jquery.ztree.excheck-3.5.js"></script>
+<script src="/plugins/zTree/js/jquery.ztree.exedit.js"></script>
+<script src="/plugins/zTree/zTree_conf.js"></script>
+<script src="/js/uuid.js"></script>
+
+<script>
+
+
+    var app = angular.module('index-app',[] );
+
+
+
+    app.filter( "title_filter", function() {
+        var filterfun = function(code) {
+            var result = code.length > 10 ?  code.substr(0,10) : code ;
+            return result;
+        };
+        return filterfun;
+    })
+
+</script>
+
+
+
+</body>
+
+</html>

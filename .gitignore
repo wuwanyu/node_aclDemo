@@ -1,0 +1,8 @@
+server_modules
+node_modules
+build
+.DS_Store
+npm-debug.log
+.readme.txt
+.idea
+.public/upload

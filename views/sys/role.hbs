@@ -1,0 +1,230 @@
+<link rel="stylesheet" href="/plugins/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<div class="row-fluid" ng-controller="roleCtrl">
+
+    <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">系统管理</strong> / <small>角色</small></div>
+    </div>
+    <hr>
+
+
+
+    <div class="am-g">
+        <div class="am-u-sm-8">
+            <div class="am-panel am-panel-default">
+                <div class="am-panel-hd">
+                    <h3 class="am-panel-title">角色列表
+                    <span class="am-badge am-badge-secondary am-margin-right" ng-bind="list.length"></span>
+                    <a data-am-modal="{target: '#addRoleAlert'}" data-toggle="modal" class="am-btn am-btn-success am-btn-xs am-round am-fr">创建</a>
+                    </h3>
+                </div>
+                <div class="am-panel-bd">
+                    <table class="am-table am-table-striped">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>角色名称</th>
+                            <th>角色ID</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in list">
+                            <td ng-bind="$index+1">1</td>
+                            <td ng-bind="item.name">Mark</td>
+                            <td ng-bind="item.id">Mark</td>
+                            <td>
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <button class="am-btn am-btn-default am-btn-xs am-text-secondary" ng-click="selectCurIndex($index)"> 权限</button>
+                                        <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only" data-am-modal="{target: '#updateRoleAlert'}" ng-click="updateRole($index)"> 修改</button>
+                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"  ng-click="deleteRole($index)"> 删除</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="am-u-sm-4" ng-show="curIndex!=null">
+            <div class="am-panel am-panel-default">
+                <div class="am-panel-hd">
+                    <h3 class="am-panel-title">角色权限</h3>
+                </div>
+                <div class="am-panel-bd">
+                    <ul id="treeDemo" class="ztree"></ul>
+                    <button ng-click="treeSubmit()">保存</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="updateRoleAlert">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">修改角色</div>
+            <div class="am-modal-bd">
+                <form class="am-form am-form-horizontal" enctype="multipart/form-data" id="updateRoleForm">
+                    <div class="am-form-group">
+                        <label for="user-name" class="am-u-sm-3 am-form-label">角色名称</label>
+                        <div class="am-u-sm-9">
+                            <input type="text" name="name" ng-model="list[curIndex].name" placeholder="请输入角色名称">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm ng-click="updateRoleSubmit()">确定</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="addRoleAlert">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">创建角色</div>
+            <div class="am-modal-bd">
+                <form class="am-form am-form-horizontal" enctype="multipart/form-data" id="addRoleForm">
+                    <div class="am-form-group">
+                        <label for="user-name" class="am-u-sm-3 am-form-label">角色名称</label>
+                        <div class="am-u-sm-9">
+                            <input type="text" name="name" placeholder="请输入角色名称">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm ng-click="addRoleSubmit()">确定</span>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+<SCRIPT type="text/javascript">
+    function roleCtrl($scope,$http){
+
+        var zTree;
+
+
+        //获取资源列表
+        angularHttpPost($http,"/api/acl_resource/getList",{},function(data){
+            console.log("resource/getList:",data);
+            $scope.resourceList = data.result;
+
+            $.fn.zTree.init($("#treeDemo"), tree_setting,$scope.resourceList );
+
+            zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                    type =  { "Y" : "ps", "N" : "ps" };
+            zTree.setting.check.chkboxType = type;
+
+        });
+
+
+        //获取角色列表
+        angularHttpPost($http,"/api/acl_role/getList",{},function(data){
+            console.log("roleList:",data.result);
+            $scope.list = data.result;
+        });
+
+        $scope.selectCurIndex = function(index){
+            console.log("cur index:",index);
+            $scope.curIndex = index;
+            var curUser = $scope.list[index];
+
+//            获取角色的权限列表
+            angularHttpPost($http,"/api/acl_role/getOne",{id:curUser.id},function(data){
+                zTree.checkAllNodes(false);
+                console.log("whatResources:",data.result.resources);
+                for(var key in data.result.resources){
+                    var nodes = zTree.getNodesByParam("id", key, null);
+                    if(nodes[0]){
+                        zTree.checkNode(nodes[0], true, false);
+                    }
+
+                }
+                zTree.expandAll(true);
+
+            });
+        };
+        $scope.addRole = function(){
+
+        }
+
+        $scope.updateRole = function(index){
+            $scope.curIndex = index;
+        }
+
+        $scope.updateRoleSubmit = function(){
+            var obj = $scope.list[$scope.curIndex];
+            var data = new FormData($('#updateRoleForm')[0]);
+            data.append('id', obj.id );
+            ajaxFormPost("/api/acl_role/update",data,function(data){
+                angularHttpPost($http,"/api/acl_role/getList",{},function(data){
+//                    console.log(data);
+                    $scope.list = data.result;
+                });
+               alert(data.code+":"+data.msg);
+
+            });
+        }
+
+        $scope.addRoleSubmit = function(){
+            var data = new FormData($('#addRoleForm')[0]);
+            ajaxFormPost("/api/acl_role/add",data,function(data){
+//                console.log("data:",data);
+                angularHttpPost($http,"/api/acl_role/getList",{},function(data){
+                    console.log(data);
+                    $scope.list = data.result;
+                });
+                alert(data.code+":"+data.msg);
+
+            });
+        }
+
+        $scope.deleteRole = function(index){
+            var obj = $scope.list[index];
+            var data = { id:obj.id }
+            angularHttpPost($http,"/api/acl_role/delete",data,function(data){
+                console.log("data:",data);
+                angularHttpPost($http,"/api/acl_role/getList",{},function(data){
+                    console.log(data);
+                    $scope.list = data.result;
+                });
+                alert(data.code+":"+data.msg);
+
+            });
+        }
+
+//        提交权限树
+        $scope.treeSubmit = function(){
+            var nodes = zTree.getCheckedNodes(true);
+//            console.log(">> nodes:",nodes);
+            var curUser = $scope.list[$scope.curIndex];
+            var resourceIdList = [];
+            nodes.forEach(function(node){
+                resourceIdList.push( node.id );
+            });
+            var arg = {
+                role:curUser.id,
+                resources:JSON.stringify(resourceIdList)
+            }
+            console.log("arg",arg);
+//            配置角色的权限
+            angularHttpPost($http,"/api/acl_role/allow",arg,function(data){
+                console.log("allow:",data);
+                alert(data.code+":"+data.msg);
+            });
+        }
+
+    }
+</SCRIPT>

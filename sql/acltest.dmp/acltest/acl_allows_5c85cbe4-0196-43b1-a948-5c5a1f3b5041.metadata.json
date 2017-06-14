@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"acltest.acl_allows_5c85cbe4-0196-43b1-a948-5c5a1f3b5041"},{"v":2,"key":{"_bucketname":1,"key":1},"name":"_bucketname_1_key_1","ns":"acltest.acl_allows_5c85cbe4-0196-43b1-a948-5c5a1f3b5041"}]}

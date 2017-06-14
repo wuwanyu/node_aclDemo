@@ -1,0 +1,78 @@
+<html ng-app>
+<head>
+    <title>统一查询平台.登录</title>
+    <link rel="stylesheet" href="/plugins/amaze/css/amazeui.min.css"/>
+    <style>
+        .header {
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 200%;
+            color: #333;
+            margin-top: 30px;
+        }
+        .header p {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body  ng-controller="loginCtrl">
+<div class="header">
+    <div class="am-g">
+        <h1>统一查询平台</h1>
+        <!--<p>Integrated Development Environment<br>代码编辑，代码生成，界面设计，调试，编译</p>-->
+    </div>
+    <hr>
+</div>
+<div class="am-g">
+    <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+        <form method="post" class="am-form">
+            <label for="text">账户:</label>
+            <input type="text" name="account" ng-model="loginData.account"  id="email" value="">
+            <br>
+            <label for="password">密码:</label>
+            <input type="password" ng-model="loginData.password" name="password"  id="password" value="">
+            <br>
+            <label for="remember-me">
+                <input id="remember-me" type="checkbox">
+                记住密码
+            </label>
+            <br>
+            <div class="am-cf">
+                <input type="submit" name="" value="登 录" ng-click="loginSubmit()" class="am-btn am-btn-primary am-btn-sm am-fl">
+                <input type="submit" name="" value="忘记密码 ? " class="am-btn am-btn-default am-btn-sm am-fr">
+            </div>
+        </form>
+        <hr>
+        <p>© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </div>
+</div>
+
+
+<script src="/js/jquery-1.9.1.min.js"></script>
+<script src="/js/angular.min.js"></script>
+<script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/public.js"></script>
+<script>
+
+
+function loginCtrl($http,$scope){
+    console.log("layout");
+
+   $scope.loginSubmit = function(){
+       console.log($scope.loginData);
+       angularHttpPost($http,"/api/acl_user/login",$scope.loginData,function(data){
+           console.log("login data:",data);
+           if(data.code==200){
+               $(location).attr('href', '/');
+           }else{
+               alert("提示信息："+data.msg);
+           }
+       });
+   }
+
+}
+
+</script>
+</body>
+</html>

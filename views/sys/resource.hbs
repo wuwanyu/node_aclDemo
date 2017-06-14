@@ -1,0 +1,145 @@
+<link rel="stylesheet" href="/plugins/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<style type="text/css">
+    .ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
+</style>
+
+<div class="admin-content-body" ng-controller="roleCtrl">
+    <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">系统管理</strong> / <small>资源</small></div>
+    </div>
+
+    <hr>
+
+    <div class="am-g">
+        <div class="am-u-sm-6">
+            <div class="am-panel am-panel-default">
+                <div class="am-panel-hd">
+                    <h3 class="am-panel-title">资源树</h3>
+                </div>
+                <div class="am-panel-bd">
+                    <ul id="treeDemo" class="ztree"></ul>
+                    <button ng-click="treeSubmit()">保存</button>
+                </div>
+
+            </div>
+        </div>
+        <div class="am-u-sm-6">
+            <div class="am-panel am-panel-default">
+                <div class="am-panel-hd">
+                    <h3 class="am-panel-title">
+                        资源列表
+                        <span class="am-badge am-badge-secondary am-margin-right" ng-bind="list.length"></span>
+                    </h3>
+
+                </div>
+                <div class="am-panel-bd">
+                    <table class="am-table ">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>角色名称</th>
+                            <th>角色ID</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in list">
+                            <td ng-bind="$index+1">1</td>
+                            <td ng-bind="item.name">Mark</td>
+                            <td ng-bind="item.id">Mark</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<SCRIPT type="text/javascript">
+function roleCtrl($scope,$http){
+
+    var setting = {
+        view: {
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom,
+            selectedMulti: false
+        },
+        edit: { enable: true },
+        data: { simpleData: {  enable: true  }   },
+        callback: { beforeRename: beforeRename  }
+    };
+
+
+
+    function beforeRename(treeId, treeNode, newName, isCancel) {
+          if (newName.length == 0) {
+            setTimeout(function() {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                zTree.cancelEditName();
+                alert("节点名称不能为空.");
+            }, 0);
+            return false;
+        }
+        return true;
+    }
+
+    var newCount = 1;
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+                + "' title='add node' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            zTree.addNodes(treeNode, {id:uuid.v4(), pId:treeNode.id, name:"new node" + (newCount++)});
+            return false;
+        });
+    };
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    };
+
+//    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+    $scope.treeSubmit = function(){
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        var nodes = zTree.transformToArray(zTree.getNodes());
+
+        var nodeList =[];
+        nodes.forEach(function(item){
+//            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+//            var parent = zTree.getNodeByParam("id", item.pId, null);
+//            console.log(nodes);
+            nodeList.push({
+                id:item.id,
+                pId:item.pId?item.pId:0,
+                name:item.name
+            });
+        });
+        console.log(">> arg:",nodeList);
+        angularHttpPost($http,"/api/acl_resource/addArray",{list:JSON.stringify(nodeList)},function(data){
+            console.log("allow:",data);
+            alert(data.code+":"+data.msg);
+        });
+    }
+
+    angularHttpPost($http,"/api/acl_resource/getList",{},function(data){
+        console.log("getList:",data);
+        $scope.list = data.result;
+       if(data.result.length>0){
+           $.fn.zTree.init($("#treeDemo"), setting, data.result);
+       }else{
+           var zNodes =[ { id:1, pId:0, name:"全部", open:true}, ];
+           $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+       }
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.expandAll(true);
+    });
+
+
+}
+</SCRIPT>

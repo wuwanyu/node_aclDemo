@@ -1,4 +1,4 @@
 module.exports = {
-  port: 3001,
+  port: 3000,
   mongo: "mongodb://localhost/waterline-sample"
 };

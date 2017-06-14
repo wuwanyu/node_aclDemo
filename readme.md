@@ -48,7 +48,7 @@ Amaze ui、angular、Z-Tree
 
 ##### 3. 运行：npm start
 
-##### 4.在浏览器输入： http://localhost:3001
+##### 4.在浏览器输入： http://localhost:3001（用户名/密码：admin/admin）
 
 ### 接口文档
 
